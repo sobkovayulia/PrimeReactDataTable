@@ -47,17 +47,23 @@ export class DataTableDynamicDemo extends Component {
     reject() {
         this.toast.show({ severity: 'success', summary: 'Видалено', life: 3000 });
     }
-    newLine() {
-        /* var newName = document.getElementById('input1').value;
+
+    newLine() { //Вставити звуки
+        var newName = document.getElementById('input1').value;
         var newUsername = document.getElementById('input2').value;
         var newPassword = document.getElementById('input3').value;
 
-        var newSale = [{name: newName, username: newUsername, password: newPassword}]; */
-        
-        var newSale = this.sale.unshift({name: document.getElementById('input1').value, username:document.getElementById('input2').value, password: document.getElementById('input3').value })
+        if (newName === "" && newUsername === "" && newPassword === "") {
 
-        console.log(newSale);
-        this.toast.show({ severity: 'success', summary: 'Додано', life: 3000 });
+        }
+        else {
+            var newSale = this.sale.push({ name: newName, username: newUsername, password: newPassword });
+            console.log(newSale);
+            this.toast.show({ severity: 'success', summary: 'Додано', life: 3000 });
+            return false;
+        }
+
+
     }
     render() {
         const dynamicColumns = this.columns.map((col, i) => {
@@ -67,11 +73,12 @@ export class DataTableDynamicDemo extends Component {
         return (
             <div>
                 <Toast ref={(el) => this.toast = el} />
+
                 <div className="input">
 
                     <span className="p-float-label">
                         <InputText id='input1' />
-                        <label htmlFor="in">Name</label>
+                        <label htmlFor="in" id="lable1">Name</label>
                     </span>
 
                     <span className="p-float-label">

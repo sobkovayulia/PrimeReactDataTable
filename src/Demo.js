@@ -6,110 +6,125 @@ import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 
 export class DataTableDynamicDemo extends Component {
-    emptyProduct = {
+    emptyColumns = {
         name: '',
         username: '',
-        password: ''
+        number: ''
     };
     constructor(props) {
         super(props);
 
         this.state = {
-            visible: false,
-            strings: this.emptyProduct
+            product: this.emptyColumns,
+            visible: false
         };
         this.newLine = this.newLine.bind(this);
-        this.reject = this.reject.bind(this);
+        this.delete = this.delete.bind(this);
+
         this.columns = [
             { header: "Name", field: "name" },
             { header: "Username", field: "username" },
-            { header: "Password", field: "password" }
+            { header: "Number", field: "number" },
         ];
-
-        this.sale = [
+        this.tableArray = [
             {
-                name: 'чсмчичичвичвпріре', username: 'аявамявмавам', password: 'вапвпав'
+                name: 'name1', username: 'username1', number: '1'
             },
             {
-                name: 'амчсмчмчмчивчаи', username: 'аявамявпрвагапвмавам', password: 'впаяваппф'
+                name: 'name2', username: 'username2', number: '2'
             },
             {
-                name: 'ваияаміявм', username: 'ірврківрікр', password: 'впачвпрвпруі'
+                name: 'name3', username: 'username3', number: '3'
             },
             {
-                name: 'аявамявмавам', username: 'ікппачва', password: 'впаіру'
+                name: 'name4', username: 'username4', number: '4'
             },
             {
-                name: 'амвапіпіікрі', username: 'впвпрачпр', password: 'пчвап'
+                name: 'name5', username: 'username5', number: '5'
             },
         ];
     }
-    reject() {
+    delete() {
+        /* var description = document.getElementById();
+        description.parentNode.removeChild(description); */
+
         this.toast.show({ severity: 'success', summary: 'Видалено', life: 3000 });
     }
-
     newLine() { //Вставити звуки
-        var newName = document.getElementById('input1').value;
-        var newUsername = document.getElementById('input2').value;
-        var newPassword = document.getElementById('input3').value;
+        var newNameValue = document.getElementById('input1').value;
+        var newUsernameValue = document.getElementById('input2').value;
+        var newNumberValue = document.getElementById('input3').value;
 
-        if (newName === "" && newUsername === "" && newPassword === "") {
+        var newName = document.getElementById('input1');
+        var newUsername = document.getElementById('input2');
+        var newNumber = document.getElementById('input3');
 
+       
+        if (newNameValue === "" || newUsernameValue === "" || newNumberValue === "") {
+
+            this.toast.show({ severity: 'error', summary: 'Ви заповнили не усі поля', life: 3000 });
         }
         else {
-            var newSale = this.sale.push({ name: newName, username: newUsername, password: newPassword });
-            console.log(newSale);
-            this.toast.show({ severity: 'success', summary: 'Додано', life: 3000 });
-            return false;
+            if (!parseInt(newNumberValue) && newNameValue.length >= 1 && newUsernameValue.length >= 1) {
+                this.toast.show({ severity: 'error', summary: 'не число', life: 3000 });
+            }
+            else {
+                var newTableArray = this.tableArray.unshift({ name: newNameValue, username: newUsernameValue, number: newNumberValue });
+                console.log(newTableArray);
+                this.toast.show({ severity: 'success', summary: 'Додано', life: 3000 });
+
+                document.getElementById('input1').value = "";
+                document.getElementById('input2').value = "";
+                document.getElementById('input3').value = "";
+                return false;
+            }
+           
         }
 
-
     }
-    render() {
-        const dynamicColumns = this.columns.map((col, i) => {
-            return <Column key={col.field} field={col.field} header={col.header} />;
-        });
 
-        return (
-            <div>
-                <Toast ref={(el) => this.toast = el} />
+render() {
+    const dynamicColumns = this.columns.map((col, i) => {
+        return <Column key={col.field} field={col.field} header={col.header} />;
+    });
+    return (
+        <div className="block" >
+            <Toast ref={(el) => this.toast = el} />
 
-                <div className="input">
+            <div className="input">
 
-                    <span className="p-float-label">
-                        <InputText id='input1' />
-                        <label htmlFor="in" id="lable1">Name</label>
-                    </span>
-
-                    <span className="p-float-label">
-                        <InputText id='input2' />
-                        <label htmlFor="in">Username</label>
-                    </span>
-
-                    <span className="p-float-label">
-                        <InputText id='input3' />
-                        <label htmlFor="in">Password</label>
-                    </span>
-
-                </div>
-                <div className='button'>
-                    <Button id="id_button_new" icon="pi pi-plus" className="p-button-rounded p-button-success p-button-outlined" onClick={this.newLine} />
-                    <Button id="id_button_delete" onClick={this.reject} icon="pi pi-trash" className="p-button-rounded p-button-danger p-button-outlined" />
-                </div>
-                <div className='data_table' >
-                    <DataTable
-                        id="data_table_id"
-                        value={this.sale}
-                        paginator rows={2}
-                        selectionMode="single"
-                        selection={this.state.selectedProduct1}
-                        onSelectionChange={e => this.setState({ selectedProduct1: e.value })}
-                    >
-                        {dynamicColumns}
-                    </DataTable>
-                </div>
+                <span className="p-float-label">
+                    <InputText id="input1" />
+                    <label htmlFor="in" id="lable1">Name</label>
+                </span>
+                <span className="p-float-label">
+                    <InputText id='input2' />
+                    <label htmlFor="in">Username</label>
+                </span>
+                <span className="p-float-label">
+                    <InputText id='input3' />
+                    <label htmlFor="in">Number</label>
+                </span>
 
             </div>
-        );
-    }
+            <div className='button'>
+                <Button id="id_button_new" icon="pi pi-plus" className="p-button-rounded p-button-success" onClick={this.newLine} />
+                <Button id="id_button_delete" icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={this.delete} />
+
+            </div>
+            <div className='data_table' >
+                <DataTable
+                    id="data_table_id"
+                    value={this.tableArray}
+                    paginator rows={2}
+                    selectionMode="singl"
+                    selection={this.state.selected}
+                    onSelectionChange={e => this.setState({ selected: e.value })}
+                >
+                    {dynamicColumns}
+                </DataTable>
+            </div>
+        </div>
+    );
+}
 }

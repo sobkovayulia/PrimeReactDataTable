@@ -9,22 +9,21 @@ export class DataTableDynamicDemo extends Component {
     emptyColumns = {
         name: '',
         username: '',
-        number: ''
+        number: '',
+        id: null
     };
     constructor(props) {
         super(props);
-
         this.state = {
-            product: this.emptyColumns,
-            visible: false
+            visible: false,
+            line: this.emptyColumns
         };
         this.newLine = this.newLine.bind(this);
         this.delete = this.delete.bind(this);
-
         this.columns = [
             { header: "Name", field: "name" },
             { header: "Username", field: "username" },
-            { header: "Number", field: "number" },
+            { header: "Number", field: "number" }
         ];
         this.tableArray = [
             {
@@ -44,9 +43,16 @@ export class DataTableDynamicDemo extends Component {
             },
         ];
     }
-    delete() {
+    delete(e) {
         /* var description = document.getElementById();
         description.parentNode.removeChild(description); */
+
+        var array = [...this.state.line]; // make a separate copy of the array
+        var index = array.indexOf(e.target.value)
+        if (index !== -1) {
+            array.splice(index, 1);
+            this.setState({ line: array });
+        }
 
         this.toast.show({ severity: 'success', summary: 'Видалено', life: 3000 });
     }
@@ -55,11 +61,6 @@ export class DataTableDynamicDemo extends Component {
         var newUsernameValue = document.getElementById('input2').value;
         var newNumberValue = document.getElementById('input3').value;
 
-        var newName = document.getElementById('input1');
-        var newUsername = document.getElementById('input2');
-        var newNumber = document.getElementById('input3');
-
-       
         if (newNameValue === "" || newUsernameValue === "" || newNumberValue === "") {
 
             this.toast.show({ severity: 'error', summary: 'Ви заповнили не усі поля', life: 3000 });
@@ -78,53 +79,50 @@ export class DataTableDynamicDemo extends Component {
                 document.getElementById('input3').value = "";
                 return false;
             }
-           
         }
-
     }
+    render() {
 
-render() {
-    const dynamicColumns = this.columns.map((col, i) => {
-        return <Column key={col.field} field={col.field} header={col.header} />;
-    });
-    return (
-        <div className="block" >
-            <Toast ref={(el) => this.toast = el} />
+        const dynamicColumns = this.columns.map((col) => {
+            return <Column key={col.field} field={col.field} header={col.header} />;
+        });
+        return (
+            <div className="block">
+                <Toast ref={(el) => this.toast = el} />
 
-            <div className="input">
-
-                <span className="p-float-label">
-                    <InputText id="input1" />
-                    <label htmlFor="in" id="lable1">Name</label>
-                </span>
-                <span className="p-float-label">
-                    <InputText id='input2' />
-                    <label htmlFor="in">Username</label>
-                </span>
-                <span className="p-float-label">
-                    <InputText id='input3' />
-                    <label htmlFor="in">Number</label>
-                </span>
-
+                <div className="input">
+                    <span className="p-float-label">
+                        <InputText id="input1" />
+                        <label htmlFor="in">Name</label>
+                    </span>
+                    <span className="p-float-label">
+                        <InputText id='input2' />
+                        <label htmlFor="in">Username</label>
+                    </span>
+                    <span className="p-float-label">
+                        <InputText id='input3' />
+                        <label htmlFor="in">Number</label>
+                    </span>
+                </div>
+                <div className='button'>
+                    <Button type="submit" id="id_button_new" icon="pi pi-plus"
+                        className="p-button-rounded p-button-success" onClick={this.newLine} />
+                    <Button type="submit" id="id_button_delete" icon="pi pi-trash"
+                        className="p-button-rounded p-button-danger" onClick={this.delete} />
+                </div>
+                <div className='data_table' >
+                    <DataTable
+                        id="data_table_id"
+                        value={this.tableArray}
+                        paginator rows={2}
+                        selectionMode="singl"
+                        selection={this.state.selected}
+                        onSelectionChange={e => this.setState({ selected: e.value })}
+                    >
+                        {dynamicColumns}
+                    </DataTable>
+                </div>
             </div>
-            <div className='button'>
-                <Button id="id_button_new" icon="pi pi-plus" className="p-button-rounded p-button-success" onClick={this.newLine} />
-                <Button id="id_button_delete" icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={this.delete} />
-
-            </div>
-            <div className='data_table' >
-                <DataTable
-                    id="data_table_id"
-                    value={this.tableArray}
-                    paginator rows={2}
-                    selectionMode="singl"
-                    selection={this.state.selected}
-                    onSelectionChange={e => this.setState({ selected: e.value })}
-                >
-                    {dynamicColumns}
-                </DataTable>
-            </div>
-        </div>
-    );
-}
+        );
+    }
 }

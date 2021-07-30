@@ -11,9 +11,10 @@
 .block{
   width: 700px;
   height: max-content;
+  margin: 10px;
 }
 #input1, #input2{
-  margin-right: 20px;
+  margin-right: 10px;
 }
 .input{
   width: 100%;
@@ -21,9 +22,6 @@
   align-items:center;
   justify-content:center;
   display: flex;
-}
-#trash{
-  background-color: blueviolet;
 }
 .data_table{
   width: 100%;
